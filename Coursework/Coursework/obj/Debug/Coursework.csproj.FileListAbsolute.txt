@@ -1,0 +1,28 @@
+C:\Users\Khanh\Desktop\Khanh\School Vietnam\C#\Coursework\Coursework\bin\Debug\Coursework.exe.config
+C:\Users\Khanh\Desktop\Khanh\School Vietnam\C#\Coursework\Coursework\bin\Debug\Coursework.exe
+C:\Users\Khanh\Desktop\Khanh\School Vietnam\C#\Coursework\Coursework\bin\Debug\Coursework.pdb
+C:\Users\Khanh\Desktop\Khanh\School Vietnam\C#\Coursework\Coursework\obj\Debug\Coursework.csprojAssemblyReference.cache
+C:\Users\Khanh\Desktop\Khanh\School Vietnam\C#\Coursework\Coursework\obj\Debug\Coursework.SignIn.resources
+C:\Users\Khanh\Desktop\Khanh\School Vietnam\C#\Coursework\Coursework\obj\Debug\Coursework.Properties.Resources.resources
+C:\Users\Khanh\Desktop\Khanh\School Vietnam\C#\Coursework\Coursework\obj\Debug\Coursework.csproj.GenerateResource.cache
+C:\Users\Khanh\Desktop\Khanh\School Vietnam\C#\Coursework\Coursework\obj\Debug\Coursework.csproj.CoreCompileInputs.cache
+C:\Users\Khanh\Desktop\Khanh\School Vietnam\C#\Coursework\Coursework\obj\Debug\Coursework.exe
+C:\Users\Khanh\Desktop\Khanh\School Vietnam\C#\Coursework\Coursework\obj\Debug\Coursework.pdb
+C:\Users\Khanh\Desktop\Khanh\School Vietnam\C#\Coursework\Coursework\obj\Debug\Coursework.SignUp.resources
+C:\Users\Khanh\Desktop\Khanh\School Vietnam\C#\Coursework\Coursework\bin\Debug\Database1.mdf
+C:\Users\Khanh\Desktop\Khanh\School Vietnam\C#\Coursework\Coursework\bin\Debug\Database1_log.ldf
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\bin\Debug\Database1.mdf
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\bin\Debug\Database1_log.ldf
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\bin\Debug\Coursework.exe.config
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\bin\Debug\Coursework.exe
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\bin\Debug\Coursework.pdb
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\obj\Debug\Coursework.csprojAssemblyReference.cache
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\obj\Debug\Coursework.SignUp.resources
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\obj\Debug\Coursework.SignIn.resources
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\obj\Debug\Coursework.Properties.Resources.resources
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\obj\Debug\Coursework.csproj.GenerateResource.cache
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\obj\Debug\Coursework.csproj.CoreCompileInputs.cache
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\obj\Debug\Coursework.exe
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\obj\Debug\Coursework.pdb
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\obj\Debug\Coursework.MainMenu.resources
+C:\Users\Khanh\Desktop\C#\Coursework\Coursework\obj\Debug\Coursework.add_subject.resources
