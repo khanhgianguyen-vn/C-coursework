@@ -20,17 +20,22 @@ namespace Coursework
 
         public MainMenu()
         {
+            // Inserts the name saved in the session into a public variable
             string Name = Session.name;
             InitializeComponent();
+
+            // Text welcoming the user
             mainMenu_lbl.Text = "Welcome " + Name + "!";
             dataGridView.CellValueChanged += dataGridView_CellValueChanged;
 
+            // Window size modifications
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
             this.MaximumSize = new System.Drawing.Size(1122, 663);
             this.MinimumSize = new System.Drawing.Size(1122, 663);
         }
 
+        // Function to hide all the functions associated with dataGridView
         private void dataGridViewHide()
         {
             dataGridView.Hide();
@@ -44,6 +49,7 @@ namespace Coursework
             delete_btn.Hide();
         }
 
+        // Function to show all the functions associated with dataGridView
         private void dataGridViewShow()
         {
             search_lbl.Show();
@@ -54,10 +60,25 @@ namespace Coursework
             ascending_btn.Show();
             descending_btn.Show();
             delete_btn.Show();
+
+            // Checks if the role is student, if it is then hide everything but the dataGridView table
+            if (Role == "Student")
+            {
+                search_lbl.Hide();
+                search_textbox.Hide();
+                search_btn.Hide();
+                role_lbl.Hide();
+                roleComboBox.Hide();
+                ascending_btn.Hide();
+                descending_btn.Hide();
+                delete_btn.Hide();
+            }
         }
 
+        // Function to add to the ComboBox
         private string addToComboBox()
         {
+            // Clear the combobox first
             roleComboBox.Items.Clear();
             string query = "";
 

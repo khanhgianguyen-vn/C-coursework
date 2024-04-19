@@ -19,6 +19,7 @@ namespace Coursework
         {
             InitializeComponent();
             
+            // Setting the window size and not allowing the user to change
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
             this.MaximumSize = new System.Drawing.Size(816, 489);
@@ -27,15 +28,19 @@ namespace Coursework
             this.FormClosed += SignUpClosed;
         }
 
+        // In case the user closes the sign up window
         private void SignUpClosed(object sender, FormClosedEventArgs e)
         {
+            // Checks if the user is logged in
             if (Session.logged_in)
             {
+                // Shows the main menu
                 MainMenu mainMenu = new MainMenu();
                 mainMenu.Show();
             }
             else
             {
+                // Shows the sign in form
                 SignIn signin = new SignIn();
                 signin.Show();
             }
@@ -156,10 +161,24 @@ namespace Coursework
                                     // Execute the query and retrieve the inserted ID
                                     int personId = Convert.ToInt32(command.ExecuteScalar()); // ExecuteScalar function executes the query and then collect the SELECT function
 
+                                    Person newPerson = new Person();
+                                    newPerson.Name = Name;
+                                    newPerson.Telephone = Telephone;
+                                    newPerson.Email = Email;
+                                    newPerson.Role = Role;
+                                    newPerson.Password = Password;
+
                                     // Retrieve values from visible controls based on the selected role
                                     // Separating which info and which table will be sent into the database
                                     if (Role == "Administrator")
                                     {
+                                        Administrator newAdmin = new Administrator();
+                                        newAdmin.PersonId = personId;
+                                        newAdmin.Salary = Convert.ToInt32(salary_adminTextBox.Text);
+                                        newAdmin.FullTime = fullTimeAdminCheckBox.Checked;
+                                        newAdmin.WorkingHours = Convert.ToInt32(workingHoursAdminTextBox.Text);
+
+                                        // Build query to insert into administration table
                                         query_specific_role = "INSERT INTO [Administration] (PersonId, Salary, FullTime, WorkingHours) VALUES (@person_id, @Salary, @FullTime, @WorkingHours)";
                                         SqlCommand command_insert_role = new SqlCommand(query_specific_role, connection);
                                         command_insert_role.Parameters.AddWithValue("@person_id", personId);
@@ -170,6 +189,12 @@ namespace Coursework
                                     }
                                     if (Role == "Teacher")
                                     {
+                                        TeachingStaff newTeacher = new TeachingStaff();
+                                        newTeacher.PersonId = personId;
+                                        newTeacher.Salary = Convert.ToInt32(teacherSalaryTextBox.Text);
+                                        newTeacher.Subjects = teacherSubjectsTextBox.Text;
+
+                                        // Build query to insert into teachingstaff table
                                         query_specific_role = "INSERT INTO [TeachingStaff] (PersonId, Salary, Subjects) VALUES (@person_id, @Salary, @Subjects)";
                                         SqlCommand command_insert_role = new SqlCommand(query_specific_role, connection);
                                         command_insert_role.Parameters.AddWithValue("@person_id", personId);
@@ -179,6 +204,12 @@ namespace Coursework
                                     }
                                     if (Role == "Student")
                                     {
+                                        Student newStudent = new Student();
+                                        newStudent.PersonId = personId;
+                                        newStudent.CurrentSubjects = currentSubjectsTextBox.Text;
+                                        newStudent.PreviousSubjects = previousSubjectsTextBox.Text;
+
+                                        // Build query to insert into student table
                                         query_specific_role = "INSERT INTO [Student] (PersonId, currentSubjects, previousSubjects) VALUES (@person_id, @currentSubjects, @previousSubjects)";
                                         SqlCommand command_insert_role = new SqlCommand(query_specific_role, connection);
                                         command_insert_role.Parameters.AddWithValue("@person_id", personId);
@@ -187,8 +218,10 @@ namespace Coursework
                                         command_insert_role.ExecuteNonQuery();
                                     }
 
+                                    // Checks if the user is logged in (administrators reuses this sign up code)
                                     if (Session.logged_in)
                                     {
+                                        // Popup message informing the user
                                         MessageBox.Show("New person added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                         MainMenu mainMenu = new MainMenu();
                                         mainMenu.Show();
@@ -196,6 +229,7 @@ namespace Coursework
                                     }
                                     else
                                     {
+                                        // Popup message informing the user
                                         MessageBox.Show("Signed up successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                         SignIn signInForm = new SignIn();
                                         signInForm.Show();
@@ -213,34 +247,42 @@ namespace Coursework
                         }
                         else
                         {
+                            // Error message telling the user to input two subjects
                             MessageBox.Show("Please input two subjects.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         
                     }
                     else
                     {
+                        // Error message informing the user that the role box can not be empty
                         MessageBox.Show("Role can not be empty!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             } 
             catch (Exception ex)
             {
+                // Error message informing the user of other errors
                 MessageBox.Show("Error occured: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
+        // Clicking on the logo
         private void pictureBox1_Click(object sender, EventArgs e)
         {
+            // Checks if the user is logged in
             if (Session.logged_in)
             {
+                // Shows the mainMenuForm
                 MainMenu mainMenuForm = new MainMenu();
 
                 mainMenuForm.Show();
 
                 this.Hide();
             }
+            // if the user is not logged in
             else
             {
+                // Shows the sign in form
                 SignIn signInForm = new SignIn();
 
                 signInForm.Show();
