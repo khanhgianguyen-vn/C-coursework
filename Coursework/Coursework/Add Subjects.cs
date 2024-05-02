@@ -103,6 +103,13 @@ namespace Coursework
                     }
                 }
 
+
+                // Calls the GetNewData
+                Program.DataAccessLayer dataAccessLayer = new Program.DataAccessLayer(connectionString);
+                List<Person> people = new List<Person>();
+
+                Program.DataAccessLayer.GetNewData(people, dataAccessLayer);
+
                 MessageBox.Show("Subject(s) added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

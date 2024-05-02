@@ -92,6 +92,7 @@ namespace Coursework
 
                                     using (SqlCommand command_name = new SqlCommand(query_name, connection))
                                     {
+                                        // Adding email_selected to the query
                                         command_name.Parameters.AddWithValue("@Email", email_selected);
 
                                         Session.name = Convert.ToString(command_name.ExecuteScalar());
@@ -102,11 +103,13 @@ namespace Coursework
 
                                     using (SqlCommand command_role = new SqlCommand(query_role, connection))
                                     {
+                                        // Adding email_selected to the query
                                         command_role.Parameters.AddWithValue("@Email", email_selected);
 
                                         Session.role_signed_in = Convert.ToString(command_role.ExecuteScalar());
 
                                     }
+                                    // Getting the user's id from the Person table to assign into Session.id
                                     string query_id = "SELECT id From Person WHERE email = @Email";
 
                                     using (SqlCommand command_role = new SqlCommand(query_id, connection))
@@ -127,6 +130,7 @@ namespace Coursework
                         }
                         else
                         {
+                            // Shows an error message if the email doesnt exists
                             MessageBox.Show("E-mail doesn't exist!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }

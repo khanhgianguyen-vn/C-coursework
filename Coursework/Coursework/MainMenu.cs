@@ -82,10 +82,13 @@ namespace Coursework
             roleComboBox.Items.Clear();
             string query = "";
 
+            // Checks if the role is not Student
             if (Role != "Student")
             {
+                // Checks if the role is Administrator
                 if (Role == "Administrator")
                 {
+                    // Build query to collect data from person, and innerjoins relevant data from adminstration table
                     query = "SELECT p.Id, p.Name, p.Telephone, p.Email, p.Role, " +
                        "CASE " +
                        "WHEN p.Role = 'Teacher' THEN t.salary " +
@@ -99,13 +102,17 @@ namespace Coursework
                        "LEFT JOIN TeachingStaff t ON p.Id = t.PersonId " +
                        "LEFT JOIN Student s ON p.Id = s.PersonId;";
 
+                    // Adds items into the combobox
                     string[] itemsToAdd = { "All", "Administrator", "Teacher", "Student" };
                     roleComboBox.Items.AddRange(itemsToAdd);
                 }
+                // Checks if the role is Teacher
                 if (Role == "Teacher")
                 {
+                    // Build query to collect data from TeachingStaff table and innerjoins relevant data from person table
                     query = "SELECT e.Id, d.Name, e.Subjects FROM TeachingStaff e INNER JOIN Person d ON e.PersonId = d.Id";
 
+                    // Adds items into the combobox
                     string[] itemsToAdd = { "Teacher", "Student" };
                     roleComboBox.Items.AddRange(itemsToAdd);
                 }
@@ -113,9 +120,40 @@ namespace Coursework
             return query;
         }
 
+        // When the user clicks on the "View" button
         private void view_btn_Click(object sender, EventArgs e)
         {
+            // Calls the GetNewData
+            Program.DataAccessLayer dataAccessLayer = new Program.DataAccessLayer(connectionString);
+            List<Person> people = new List<Person>();
+
+            Program.DataAccessLayer.GetNewData(people, dataAccessLayer);
+
+            // A for loop to print all data into the console
+            foreach (Person person in people)
+            {
+                Console.WriteLine($"Name: {person.Name}, Telephone: {person.Telephone}, Email: {person.Email}, Role: {person.Role}");
+
+                if (person is Administrator admin)
+                {
+                    Console.WriteLine($"Full Time: {admin.FullTime}, Working Hours: {admin.WorkingHours}, Salary: {admin.Salary}");
+                }
+                else if (person is TeachingStaff teacher)
+                {
+                    Console.WriteLine($"Salary: {teacher.Salary}, Subjects: {teacher.Subjects}");
+                }
+                else if (person is Student student)
+                {
+                    Console.WriteLine($"Current Subjects: {student.CurrentSubjects}, Previous Subjects: {student.PreviousSubjects}");
+                }
+
+                Console.WriteLine();
+            }
+
+            // Declaring query variable
             string query = addToComboBox();
+
+            // Shows the datagridview
             dataGridViewShow();
 
             DataTable dataTable = new DataTable();
@@ -126,19 +164,25 @@ namespace Coursework
                 {
                     connection.Open();
 
+                    // Checks if role is student
                     if (Role == "Student")
                     {
+                        // Collects the id
                         string id = Session.id;
+
                         query = "SELECT * FROM Student WHERE PersonId = @personId";
+
                         SqlCommand command = new SqlCommand(query, connection);
+                        // Inserts id into the query
                         command.Parameters.AddWithValue("@personId", id);
 
                         using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                         {
+                            // Fills the table
                             adapter.Fill(dataTable);
                         }
                     }
-                    else
+                    else // If the user logged in is not a student
                     {
                         using (SqlDataAdapter adapter = new SqlDataAdapter(query, connectionString))
                         {
@@ -156,33 +200,46 @@ namespace Coursework
             }
         }
 
+        // When the user clicks the logout button
         private void logout_btn_Click(object sender, EventArgs e)
         {
+            // Shows the signInForm
             SignIn signInForm = new SignIn();
 
             signInForm.Show();
 
             this.Hide();
 
+            // Resets everything in the session
             Session.role_signed_in = "";
             Session.name = "";
             Session.logged_in = false;
+            Session.id = "";
         }
 
+        // When the user clicks on the logo
         private void Logo_Click(object sender, EventArgs e)
         {
+            // Take the current date time
             DateTime currentDateTime = DateTime.Today;
+            // Formats the date to show day month and year
             string formattedDate = currentDateTime.ToString("dd-MM-yyyy");
+            // Add "Current Date:" before the current date
             mainMenu_lbl.Text = "Current Date: " + formattedDate;
+
+            // Hides the datagridview
             dataGridViewHide();
         }
 
+        // Checks when the user clicks the search button
         private void search_btn_Click(object sender, EventArgs e)
         {
+            // Getting the text from the searchbox and assigns it
             string search_query = search_textbox.Text.Trim();
 
             if (string.IsNullOrWhiteSpace(search_query))
-            {
+            { 
+                // Shows error message when the user leaves the search box blank
                 MessageBox.Show("Please enter a search query.");
                 return;
             }
@@ -250,12 +307,17 @@ namespace Coursework
             }
         }
 
+        // When the user scrolls from the combobox
         private void roleComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             string query = "";
-            if (roleComboBox.Text == "All")
+
+            // Switch case for each texts in the combobox
+            switch(roleComboBox.Text)
             {
-                query = "SELECT p.Id, p.Name, p.Telephone, p.Email, p.Role, p.Password, " +
+                case "All":
+                    // Selects from person and innerjoin from both teacher and student with relevant data
+                    query = "SELECT p.Id, p.Name, p.Telephone, p.Email, p.Role, p.Password, " +
                        "CASE " +
                        "WHEN p.Role = 'Teacher' THEN t.salary " +
                        "ELSE NULL " +
@@ -267,18 +329,19 @@ namespace Coursework
                        "FROM Person p " +
                        "LEFT JOIN TeachingStaff t ON p.Id = t.PersonId " +
                        "LEFT JOIN Student s ON p.Id = s.PersonId;";
-            }
-            if (roleComboBox.Text == "Administrator")
-            {
-                query = "SELECT A.*, P.Name FROM Administration A LEFT JOIN Person P ON A.PersonId = P.Id";
-            }
-            if (roleComboBox.Text == "Teacher")
-            {
-                query = "SELECT TS.*, P.Name FROM TeachingStaff TS LEFT JOIN Person P ON TS.PersonId = P.Id";
-            }
-            if (roleComboBox.Text == "Student")
-            {
-                query = "SELECT S.*, P.Name FROM Student S LEFT JOIN Person P ON S.PersonId = P.Id";
+                    break;
+                case "Administrator":
+                    // Selects all from administration and left joins name from person table
+                    query = "SELECT A.*, P.Name FROM Administration A LEFT JOIN Person P ON A.PersonId = P.Id";
+                    break;
+                case "Teacher":
+                    // Selects all from teaching staff and left joins name from person table
+                    query = "SELECT TS.*, P.Name FROM TeachingStaff TS LEFT JOIN Person P ON TS.PersonId = P.Id";
+                    break;
+                case "Student":
+                    // Selects all from students and left joins name from person table
+                    query = "SELECT S.*, P.Name FROM Student S LEFT JOIN Person P ON S.PersonId = P.Id";
+                    break;
             }
 
             DataTable dataTable = new DataTable();
@@ -331,13 +394,14 @@ namespace Coursework
 
         private void add_btn_Click(object sender, EventArgs e)
         {
+            // If the role is administrator then the sign up form will show
             if (Role == "Administrator")
             {
                 SignUp signUpForm = new SignUp();
                 signUpForm.Show();
                 this.Hide();
             }
-            else
+            else // Add_subject form will show up
             {
                 add_subject add_SubjectForm = new add_subject();
                 add_SubjectForm.Show();
@@ -346,11 +410,12 @@ namespace Coursework
         }
 
 
-
+        // When the user edits from the datagridview box
         private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
+                // Opens a connection
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -385,7 +450,13 @@ namespace Coursework
                     }
 
                     MessageBox.Show("Data updated successfully.");
+                    // Calls the GetNewData
+                    Program.DataAccessLayer dataAccessLayer = new Program.DataAccessLayer(connectionString);
+                    List<Person> people = new List<Person>();
+
+                    Program.DataAccessLayer.GetNewData(people, dataAccessLayer);
                 }
+
             }
             catch (Exception ex)
             {
@@ -412,7 +483,6 @@ namespace Coursework
                     return "Student";
                 case "FullTime":
                     return "Administrator";
-                // Add cases for other column names from different tables as needed
                 default:
                     return null;
             }
@@ -516,6 +586,12 @@ namespace Coursework
                         dataGridView.Rows.RemoveAt(selectedRow.Index);
 
                         MessageBox.Show("Row deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // Calls the GetNewData
+                        Program.DataAccessLayer dataAccessLayer = new Program.DataAccessLayer(connectionString);
+                        List<Person> people = new List<Person>();
+
+                        Program.DataAccessLayer.GetNewData(people, dataAccessLayer);
                     }
                     catch (Exception ex)
                     {

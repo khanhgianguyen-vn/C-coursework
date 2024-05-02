@@ -54,19 +54,6 @@ namespace Coursework
 
         }
 
-        private void SignUp_Load(object sender, EventArgs e)
-        {
-            // TODO: This line of code loads data into the 'database1DataSet.Student' table. You can move, or remove it, as needed.
-            this.studentTableAdapter.Fill(this.database1DataSet.Student);
-            // TODO: This line of code loads data into the 'database1DataSet.TeachingStaff' table. You can move, or remove it, as needed.
-            this.teachingStaffTableAdapter.Fill(this.database1DataSet.TeachingStaff);
-            // TODO: This line of code loads data into the 'database1DataSet.Administration' table. You can move, or remove it, as needed.
-            this.administrationTableAdapter.Fill(this.database1DataSet.Administration);
-            // TODO: This line of code loads data into the 'database1DataSet.User' table. You can move, or remove it, as needed.
-            this.PersonTableAdapter.Fill(this.database1DataSet.Person);
-
-        }
-
         // Function to show and hide textboxes and labels depending on the selected role when signing up
         private void roleComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -117,6 +104,54 @@ namespace Coursework
             }
         }
 
+
+        // Encapsulating the query that inserts admins
+        private void insert_into_admin(SqlConnection connection, int personId, int salary, bool fullTime, int workingHours)
+        {
+            // Build query to insert into administration table
+            string query = "INSERT INTO [Administration] (PersonId, Salary, FullTime, WorkingHours) VALUES (@person_id, @Salary, @FullTime, @WorkingHours)";
+            SqlCommand command_insert_role = new SqlCommand(query, connection);
+            command_insert_role.Parameters.AddWithValue("@person_id", personId);
+            command_insert_role.Parameters.AddWithValue("@Salary", salary);
+            command_insert_role.Parameters.AddWithValue("@FullTime", fullTime);
+            command_insert_role.Parameters.AddWithValue("@WorkingHours", workingHours);
+            command_insert_role.ExecuteNonQuery();
+        }
+
+        // Encapsulating the query that inserts teachers
+        private void insert_into_teachingStaff(SqlConnection connection, int personId, decimal salary, string subjects)
+        {
+            // Build query to insert into teachingstaff table
+            string query = "INSERT INTO [TeachingStaff] (PersonId, Salary, Subjects) VALUES (@person_id, @Salary, @Subjects)";
+            SqlCommand command_insert_role = new SqlCommand(query, connection);
+            command_insert_role.Parameters.AddWithValue("@person_id", personId);
+            command_insert_role.Parameters.AddWithValue("@Salary", salary);
+            command_insert_role.Parameters.AddWithValue("@Subjects", subjects);
+            command_insert_role.ExecuteNonQuery();
+        }
+
+        // Encapsulating the query that inserts students
+        private void insert_into_student(SqlConnection connection, int personId, string currentSubjects, string previousSubjects)
+        {
+            // Build query to insert into student table
+            string query = "INSERT INTO [Student] (PersonId, currentSubjects, previousSubjects) VALUES (@person_id, @currentSubjects, @previousSubjects)";
+            SqlCommand command_insert_role = new SqlCommand(query, connection);
+            command_insert_role.Parameters.AddWithValue("@person_id", personId);
+            command_insert_role.Parameters.AddWithValue("@currentSubjects", currentSubjects);
+            command_insert_role.Parameters.AddWithValue("@previousSubjects", previousSubjects);
+            command_insert_role.ExecuteNonQuery();
+        }
+
+        public int GetLastPersonId(SqlConnection connection)
+        {
+            // Getting the last Id from the person table to insert into the UserId column for their respective role
+            string query = "SELECT MAX(Id) FROM Person";
+            SqlCommand command = new SqlCommand(query, connection);
+
+            // Execute the query and retrieve the inserted ID
+            return Convert.ToInt32(command.ExecuteScalar()); // ExecuteScalar function executes the query and then collect the last ID
+        }
+
         private void next_btn_Click(object sender, EventArgs e)
         {
             
@@ -129,9 +164,6 @@ namespace Coursework
                 string Role = roleComboBox.Text;
                 string Password = passwordTextBox.Text;
                 string confirmPassword = confirmPasswordTextBox.Text;
-
-                // Declaring the string for implementation later on
-                string query_specific_role;
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -154,12 +186,8 @@ namespace Coursework
                                 if (signUpSuccess)
                                 {
                                     connection.Open();
-                                    // Getting the last Id from the person table to insert into the UserId column for their respective role
-                                    string query = "SELECT MAX(Id) FROM Person";
-                                    SqlCommand command = new SqlCommand(query, connection);
 
-                                    // Execute the query and retrieve the inserted ID
-                                    int personId = Convert.ToInt32(command.ExecuteScalar()); // ExecuteScalar function executes the query and then collect the SELECT function
+                                    int personId = GetLastPersonId(connection);
 
                                     Person newPerson = new Person();
                                     newPerson.Name = Name;
@@ -178,14 +206,7 @@ namespace Coursework
                                         newAdmin.FullTime = fullTimeAdminCheckBox.Checked;
                                         newAdmin.WorkingHours = Convert.ToInt32(workingHoursAdminTextBox.Text);
 
-                                        // Build query to insert into administration table
-                                        query_specific_role = "INSERT INTO [Administration] (PersonId, Salary, FullTime, WorkingHours) VALUES (@person_id, @Salary, @FullTime, @WorkingHours)";
-                                        SqlCommand command_insert_role = new SqlCommand(query_specific_role, connection);
-                                        command_insert_role.Parameters.AddWithValue("@person_id", personId);
-                                        command_insert_role.Parameters.AddWithValue("@Salary", salary_adminTextBox.Text);
-                                        command_insert_role.Parameters.AddWithValue("@FullTime", fullTimeAdminCheckBox.Text);
-                                        command_insert_role.Parameters.AddWithValue("@WorkingHours", workingHoursAdminTextBox.Text);
-                                        command_insert_role.ExecuteNonQuery();
+                                        insert_into_admin(connection, newAdmin.PersonId, newAdmin.Salary, newAdmin.FullTime, newAdmin.WorkingHours);
                                     }
                                     if (Role == "Teacher")
                                     {
@@ -194,13 +215,7 @@ namespace Coursework
                                         newTeacher.Salary = Convert.ToInt32(teacherSalaryTextBox.Text);
                                         newTeacher.Subjects = teacherSubjectsTextBox.Text;
 
-                                        // Build query to insert into teachingstaff table
-                                        query_specific_role = "INSERT INTO [TeachingStaff] (PersonId, Salary, Subjects) VALUES (@person_id, @Salary, @Subjects)";
-                                        SqlCommand command_insert_role = new SqlCommand(query_specific_role, connection);
-                                        command_insert_role.Parameters.AddWithValue("@person_id", personId);
-                                        command_insert_role.Parameters.AddWithValue("@Salary", teacherSalaryTextBox.Text);
-                                        command_insert_role.Parameters.AddWithValue("@Subjects", teacherSubjectsTextBox.Text);
-                                        command_insert_role.ExecuteNonQuery();
+                                        insert_into_teachingStaff(connection, newTeacher.PersonId, newTeacher.Salary, newTeacher.Subjects);
                                     }
                                     if (Role == "Student")
                                     {
@@ -209,13 +224,7 @@ namespace Coursework
                                         newStudent.CurrentSubjects = currentSubjectsTextBox.Text;
                                         newStudent.PreviousSubjects = previousSubjectsTextBox.Text;
 
-                                        // Build query to insert into student table
-                                        query_specific_role = "INSERT INTO [Student] (PersonId, currentSubjects, previousSubjects) VALUES (@person_id, @currentSubjects, @previousSubjects)";
-                                        SqlCommand command_insert_role = new SqlCommand(query_specific_role, connection);
-                                        command_insert_role.Parameters.AddWithValue("@person_id", personId);
-                                        command_insert_role.Parameters.AddWithValue("@currentSubjects", currentSubjectsTextBox.Text);
-                                        command_insert_role.Parameters.AddWithValue("@previousSubjects", previousSubjectsTextBox.Text);
-                                        command_insert_role.ExecuteNonQuery();
+                                        insert_into_student(connection, newStudent.PersonId, newStudent.CurrentSubjects, newStudent.PreviousSubjects);
                                     }
 
                                     // Checks if the user is logged in (administrators reuses this sign up code)
@@ -236,6 +245,11 @@ namespace Coursework
 
                                         this.Hide();
                                     }
+                                    // Calls the GetNewData
+                                    Program.DataAccessLayer dataAccessLayer = new Program.DataAccessLayer(connectionString);
+                                    List<Person> people = new List<Person>();
+
+                                    Program.DataAccessLayer.GetNewData(people, dataAccessLayer);
                                 }
                             }
                             else
