@@ -14,8 +14,9 @@ namespace Coursework
 {
     public partial class add_subject : Form
     {
-        static string currentDirectory = Directory.GetCurrentDirectory();
-        private string connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={currentDirectory}\Database1.mdf;Integrated Security=True;";
+        static string currentDirectory = Path.Combine(Directory.GetCurrentDirectory(), "..", "..");
+        static string fullPath = Path.GetFullPath(currentDirectory);
+        public string connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={fullPath}\Database1.mdf;Integrated Security=True;";
 
         public add_subject()
         {

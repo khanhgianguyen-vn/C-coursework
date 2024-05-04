@@ -14,8 +14,9 @@ namespace Coursework
 {
     public partial class SignUp : Form
     {
-        static string currentDirectory = Directory.GetCurrentDirectory();
-        public string connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={currentDirectory}\Database1.mdf;Integrated Security=True;";
+        static string currentDirectory = Path.Combine(Directory.GetCurrentDirectory(), "..", "..");
+        static string fullPath = Path.GetFullPath(currentDirectory);
+        public string connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={fullPath}\Database1.mdf;Integrated Security=True;";
 
         public SignUp()
         {
@@ -27,6 +28,7 @@ namespace Coursework
             this.MaximumSize = new System.Drawing.Size(816, 489);
             this.MinimumSize = new System.Drawing.Size(816, 489);
 
+            //MessageBox.Show(fullPath);
             this.FormClosed += SignUpClosed;
         }
 
