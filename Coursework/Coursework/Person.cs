@@ -39,6 +39,7 @@ namespace Coursework
     {
         public string CurrentSubjects { get; set; }
         public string PreviousSubjects { get; set; }
+
         public int PersonId { get; set; }
     }
 

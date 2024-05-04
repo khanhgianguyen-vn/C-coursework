@@ -14,7 +14,7 @@ namespace Coursework
     public partial class SignIn : Form
     {
         // Declare the connection string
-        private string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Khanh\Desktop\C#\Coursework\Coursework\Database1.mdf;Integrated Security=True";
+        private string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Khanh\Desktop\Coursework\Coursework\Database1.mdf;Integrated Security=True;";
 
         public SignIn()
         {
