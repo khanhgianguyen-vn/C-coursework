@@ -13,8 +13,10 @@ namespace Coursework
 {
     public partial class SignIn : Form
     {
-        // Declare the connection string
-        private string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Khanh\Desktop\Coursework\Coursework\Database1.mdf;Integrated Security=True;";
+        static string currentDirectory = Path.Combine(Directory.GetCurrentDirectory(), "..", "..");
+        static string fullPath = Path.GetFullPath(currentDirectory);
+        public string connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={fullPath}\Database1.mdf;Integrated Security=True;";
+
 
         public SignIn()
         {
